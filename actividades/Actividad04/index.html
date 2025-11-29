@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Números Complejos</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    
+    <style>
+        /* Estilos específicos locales para la alineación matemática */
+        .math-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        /* Inputs más pequeños para que quepan en una línea */
+        .math-input {
+            width: 120px !important; /* Sobrescribimos el width 100% del global */
+            margin-bottom: 0 !important;
+            text-align: center;
+        }
+
+        .operator {
+            font-size: 1.5rem;
+            color: var(--neon-pink);
+            font-weight: bold;
+            text-shadow: 0 0 5px var(--neon-pink);
+        }
+
+        .operator-blue { color: var(--neon-blue); text-shadow: 0 0 5px var(--neon-blue); }
+        .operator-purple { color: var(--neon-purple); text-shadow: 0 0 5px var(--neon-purple); }
+
+        .instruction-box {
+            background: rgba(0,0,0,0.3);
+            border-left: 3px solid var(--neon-blue);
+            padding: 15px;
+            margin-bottom: 30px;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+        }
+        .instruction-box li { margin-bottom: 5px; }
+
+        /* Ajuste para móvil */
+        @media (max-width: 600px) {
+            .math-input { width: 100% !important; }
+            .math-row { flex-direction: column; gap: 5px; }
+        }
+    </style>
+</head>
+<body>
+
+    <a href="../../index.html" class="btn-back">← Volver al Menú</a>
+
+    <div class="container">
+        <h1>Calculadora Compleja</h1>
+        
+        <div class="instruction-box">
+            <strong style="color: var(--neon-blue)">INSTRUCCIONES:</strong>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>Escribe en cualquier forma, las otras se calculan solas.</li>
+                <li>Soporta: <code>sqrt(2)</code>, <code>pi</code>, <code>pi/2</code>, etc.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h3>Forma Cartesiana (a + bi)</h3>
+            <div class="math-row">
+                <span class="operator">z =</span>
+                <input type="text" id="real" class="math-input" placeholder="Real (a)">
+                <span class="operator">+</span>
+                <input type="text" id="imag" class="math-input" placeholder="Imag (b)">
+                <span class="operator">i</span>
+            </div>
+            <div id="cartesian-result" class="result-box">Esperando datos...</div>
+        </div>
+
+        <div class="section">
+            <h3>Forma Polar r(cos θ + i sen θ)</h3>
+            <div class="math-row">
+                <span class="operator operator-blue">z =</span>
+                <input type="text" id="modulus" class="math-input" placeholder="Módulo (r)">
+                <span class="operator operator-blue">( cos</span>
+                <input type="text" id="angle" class="math-input" placeholder="Ángulo θ">
+                <span class="operator operator-blue">+ i sen</span>
+                <input type="text" id="angle2" class="math-input" placeholder="θ" readonly style="background: #000; border-style: dashed;">
+                <span class="operator operator-blue">)</span>
+            </div>
+            <div id="polar-result" class="result-box">Esperando datos...</div>
+        </div>
+
+        <div class="section">
+            <h3>Forma Exponencial re^(iθ)</h3>
+            <div class="math-row">
+                <span class="operator operator-purple">z =</span>
+                <input type="text" id="exp-modulus" class="math-input" placeholder="Módulo (r)">
+                <span class="operator operator-purple">e ^ ( i * </span>
+                <input type="text" id="exp-angle" class="math-input" placeholder="Ángulo θ">
+                <span class="operator operator-purple">)</span>
+            </div>
+            <div id="exponential-result" class="result-box">Esperando datos...</div>
+        </div>
+
+        <button onclick="clearAll()" style="background: transparent; border: 1px solid var(--neon-pink); color: var(--neon-pink); margin-top: 20px;">
+            LIMPIAR TODO
+        </button>
+
+        <div class="section credits" style="border-top: 1px dashed var(--neon-pink); margin-top: 40px; padding-top: 20px; text-align: center;">
+            <h3>Créditos</h3>
+            <p style="font-size: 14px;"><strong>Alumno:</strong> Juan José Zapata Buenfil</p>
+            <p style="font-size: 14px;"><strong>Grupo:</strong> 1B • <strong>Materia:</strong> Fundamentos de Álgebra</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
