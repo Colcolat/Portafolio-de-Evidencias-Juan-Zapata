@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traductor Algebraico</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    
+    <style>
+        /* --- ESTILOS LOCALES PARA ESTA ACTIVIDAD --- */
+        
+        /* Canvas de fondo para la lluvia Matrix */
+        #matrixRain {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; pointer-events: none; opacity: 0.3; /* Sutil */
+        }
+
+        /* Grid de 2 columnas para los conversores */
+        .converter-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 768px) { .converter-grid { grid-template-columns: 1fr; } }
+
+        /* Estilo de los textareas específicos */
+        textarea.matrix-input {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue);
+            font-family: 'Courier New', monospace;
+            height: 100px;
+            resize: vertical;
+        }
+        textarea.matrix-input:focus {
+            box-shadow: 0 0 15px rgba(1, 205, 254, 0.2);
+            border-color: var(--neon-pink);
+        }
+
+        /* Tarjetas de estadísticas */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .stat-card {
+            background: rgba(0,0,0,0.5);
+            border: 1px solid var(--grid-line);
+            padding: 10px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 1.5rem;
+            color: var(--neon-pink);
+            font-weight: bold;
+        }
+        .stat-label { font-size: 0.8rem; color: var(--text-dim); }
+
+        /* Botones pequeños */
+        .btn-small {
+            padding: 8px; font-size: 12px; width: auto; display: inline-block; margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="matrixRain"></canvas>
+
+    <a href="../../index.html" class="btn-back">← Volver al Menú</a>
+
+    <div class="container">
+        <h1>Traductor Algebraico</h1>
+        
+        <div class="converter-grid">
+            
+            <div class="section" style="border-color: var(--neon-blue);">
+                <h3>Lenguaje Natural</h3>
+                <textarea id="natural-input" class="matrix-input" placeholder="Ej: La suma de x e y"></textarea>
+                <button id="btn-natural-to-alg">Traducir a Álgebra</button>
+                
+                <div id="natural-result-container" style="display:none; margin-top:15px;">
+                    <div class="result-box" id="natural-result-box"></div>
+                    <div style="display:flex; gap:10px;">
+                        <button id="natural-satisfactory" class="btn-small">👍 Bien</button>
+                        <button id="natural-improve" class="btn-small" style="border-color:var(--text-dim); color:var(--text-dim)">👎 Mal</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section" style="border-color: var(--neon-pink);">
+                <h3>Expresión Algebraica</h3>
+                <textarea id="algebraic-input" class="matrix-input" placeholder="Ej: x + y"></textarea>
+                <button id="btn-alg-to-natural" style="background: linear-gradient(90deg, var(--neon-pink), var(--neon-purple));">Traducir a Natural</button>
+                
+                <div id="algebraic-result-container" style="display:none; margin-top:15px;">
+                    <div class="result-box" id="algebraic-result-box"></div>
+                    <div style="display:flex; gap:10px;">
+                        <button id="alg-satisfactory" class="btn-small">👍 Bien</button>
+                        <button id="alg-improve" class="btn-small" style="border-color:var(--text-dim); color:var(--text-dim)">👎 Mal</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="section" style="margin-top: 30px;">
+            <h3>Panel de Control</h3>
+            
+            <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom: 20px;">
+                <input type="file" id="json-file-input" accept=".json" style="width:auto; display:none;">
+                <label for="json-file-input" class="btn-back" style="cursor:pointer; margin:0;">📂 Seleccionar JSON</label>
+                <span id="file-name" style="color:var(--text-dim); font-size: 0.9rem;">Sin archivo</span>
+                
+                <button id="load-json-btn" class="btn-small" disabled>Cargar</button>
+                <button id="reset-json-btn" class="btn-small" style="border-color:var(--error-color); color:var(--error-color);">Reset</button>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="stat-total">0</div>
+                    <div class="stat-label">Patrones</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="stat-conv">0</div>
+                    <div class="stat-label">Conversiones</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="stat-sat">0</div>
+                    <div class="stat-label">Satisfactorias</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="stat-size">0 KB</div>
+                    <div class="stat-label">Tamaño BD</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h3>Historial Reciente</h3>
+                <button id="clear-history" class="btn-small" style="width:auto;">Limpiar</button>
+            </div>
+            <div id="history-list" style="max-height: 150px; overflow-y: auto; margin-top: 10px;">
+                <p style="text-align:center; opacity:0.6">Sin historial reciente</p>
+            </div>
+        </div>
+        
+        <div class="section credits" style="text-align: center; border-top: 1px dashed var(--neon-blue); padding-top: 20px;">
+            <p><strong>Alumno:</strong> Juan José Zapata Buenfil • <strong>Grupo:</strong> 1B</p>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
