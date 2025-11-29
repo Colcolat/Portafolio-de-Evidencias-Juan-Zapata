@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Simbólica</title>
+    
+    <link rel="stylesheet" href="../../css/style.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.0/math.min.js"></script>
+
+    <style>
+        /* --- ESTILOS DE TABLA DE DESPEJES --- */
+        
+        /* Caja de encabezado de fórmula (Fondo oscuro con borde) */
+        .formula-header-box {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--neon-blue);
+            border-left: 5px solid var(--neon-blue); /* Borde grueso a la izquierda como en tu imagen */
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .vars-detected {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            padding-left: 5px;
+        }
+
+        /* La Tabla */
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 1rem;
+        }
+
+        /* Cabecera de la tabla */
+        .results-table th {
+            background-color: var(--neon-blue); /* Fondo Cian */
+            color: #000; /* Texto negro para contraste */
+            text-align: left;
+            padding: 12px 15px;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        /* Celdas */
+        .results-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(1, 205, 254, 0.3); /* Línea divisoria sutil */
+            color: #fff;
+        }
+
+        /* Filas alternas para mejor lectura */
+        .results-table tr:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Columna de Variable (negrita y color) */
+        .var-col {
+            font-weight: bold;
+            color: var(--neon-blue);
+            width: 150px;
+        }
+
+        /* Columna de Fórmula (fuente de código) */
+        .formula-col {
+            font-family: 'Courier New', monospace;
+            color: var(--neon-pink); /* Fórmula en rosa neón */
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+    <a href="../../index.html" class="btn-back">← Volver al Menú</a>
+
+    <div class="container">
+        <h1>Álgebra Simbólica</h1>
+        
+        <div class="section" style="border-left: 4px solid var(--neon-purple);">
+            <h3>1. Resolver Ecuación Lineal (x)</h3>
+            <p style="font-size:0.9rem; margin-bottom:15px;">
+                Resuelve ecuaciones de una variable. El sistema simplifica y despeja.
+            </p>
+            
+            <label>Ecuación</label>
+            <span style="font-size:0.8rem; color:var(--text-dim); display:block; margin-bottom:5px;">Ej: 2x + 3 = x + 8</span>
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="ecuacion" value="2x + 3 = x + 8" style="margin-bottom:0;">
+                <button id="btn-resolver" style="width: auto; margin-top:0;">Calcular</button>
+            </div>
+
+            <div id="resDespejeParseado" class="result-box" style="display: none; margin-top: 15px;"></div>
+        </div>
+
+        <div class="section" style="border-left: 4px solid var(--neon-blue);">
+            <h3>2. Despeje Simbólico de Fórmulas</h3>
+            <p style="font-size:0.9rem; margin-bottom:15px;">
+                Introduce cualquier fórmula matemática (ej: C = 5(F - 32)/9):
+            </p>
+            
+            <label>Fórmula</label>
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="formulaLiteral" value="C = 5(F - 32)/9" style="margin-bottom:0;">
+                <button id="btn-formula" style="width: auto; margin-top:0; background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));">Generar Despejes</button>
+            </div>
+
+            <div id="resFormulaLiteral" style="margin-top: 20px;"></div>
+        </div>
+
+        <div class="section credits" style="text-align: center; border-top: 1px dashed var(--neon-blue); margin-top: 30px; padding-top: 20px;">
+            <p style="font-size: 14px;"><strong>Alumno:</strong> Juan José Zapata Buenfil</p>
+            <p style="font-size: 14px;"><strong>Materia:</strong> Fundamentos de Álgebra • <strong>Grupo:</strong> 1B</p>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
