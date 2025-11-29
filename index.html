@@ -183,5 +183,51 @@
         <p>Tecnológico de Software • Fundamentos de Álgebra • 2025</p>
     </div>
 
+    <div class="cyber-player">
+        <audio id="bg-music" loop>
+            <source src="assets/audio/theme.mp3" type="audio/mpeg">
+        </audio>
+        
+        <div class="player-controls">
+            <span class="music-label">MUSIC SYSTEM</span>
+            <button id="music-toggle" class="music-btn">
+                <i class="fas fa-play"></i> </button>
+        </div>
+        <div class="equalizer">
+            <span></span><span></span><span></span><span></span>
+        </div>
+    </div>  
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const music = document.getElementById('bg-music');
+            const btn = document.getElementById('music-toggle');
+            const player = document.querySelector('.cyber-player');
+            const icon = btn.querySelector('i');
+
+            // Volumen inicial (0.3 es 30%)
+            music.volume = 0.5; 
+
+            // 1. Detener animación al inicio
+            player.classList.add('paused');
+
+            // 2. Función del botón
+            btn.addEventListener('click', () => {
+                if (music.paused) {
+                    music.play().catch(error => console.log("Error al reproducir:", error));
+                    icon.classList.remove('fa-play');
+                    icon.classList.add('fa-pause');
+                    player.classList.remove('paused');
+                } else {
+                    music.pause();
+                    icon.classList.remove('fa-pause');
+                    icon.classList.add('fa-play');
+                    player.classList.add('paused');
+                }
+            });
+        });
+    </script>
+</body>
 </body>
 </html>
+
