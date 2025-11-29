@@ -1,0 +1,193 @@
+:root {
+    --neon-pink: #ff71ce;
+    --neon-blue: #01cdfe;
+    --neon-purple: #b967ff;
+    --deep-purple: #2b1c3d;
+    --dark-bg: #050510;
+    --grid-line: rgba(186, 85, 211, 0.4);
+    --text-main: #fff;
+    --text-dim: #b8b8b8;
+    --input-bg: #111;
+    --error-color: #ff3333;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Courier New', Courier, monospace;
+    background-color: var(--dark-bg);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    
+    /* Fondo Grid Retro con Perspectiva */
+    background-image:
+        linear-gradient(to bottom, rgba(20, 0, 30, 0.9) 0%, rgba(40, 0, 60, 0.9) 50%, rgba(10, 0, 20, 1) 100%),
+        repeating-linear-gradient(transparent, transparent 48px, var(--grid-line) 48px, var(--grid-line) 50px),
+        repeating-linear-gradient(90deg, transparent, transparent 48px, var(--grid-line) 48px, var(--grid-line) 50px);
+    background-size: 100% 100%, 100% 50px, 50px 100%;
+    background-attachment: fixed;
+    overflow-x: hidden;
+}
+
+/* Efecto horizonte brillante */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at center 80%, rgba(255, 113, 206, 0.15) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* --- CONTENEDORES --- */
+.container {
+    background: rgba(43, 28, 61, 0.95);
+    max-width: 800px; 
+    width: 100%;
+    padding: 40px;
+    border: 2px solid var(--neon-blue);
+    border-radius: 4px;
+    box-shadow: 
+        0 0 15px rgba(1, 205, 254, 0.3),
+        inset 0 0 20px rgba(1, 205, 254, 0.05);
+    margin-top: 20px;
+    position: relative;
+    z-index: 10;
+}
+
+/* --- TIPOGRAFÍA --- */
+h1 {
+    color: var(--neon-pink);
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2.5rem;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 0px rgba(255, 113, 206, 0.4);
+    letter-spacing: 2px;
+}
+
+h2, h3 {
+    color: var(--neon-blue);
+    margin-bottom: 15px;
+    margin-top: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+p, label {
+    color: var(--text-main);
+    margin-bottom: 8px;
+    font-size: 1rem;
+}
+
+label {
+    display: block;
+    color: var(--neon-purple);
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(185, 103, 255, 0.4);
+}
+
+/* --- FORMULARIOS E INPUTS --- */
+input[type="text"],
+input[type="number"],
+textarea,
+select {
+    width: 100%;
+    padding: 12px;
+    background: var(--input-bg);
+    color: var(--neon-blue);
+    border: 1px solid #444;
+    font-family: inherit;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    margin-bottom: 15px;
+}
+
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--neon-pink);
+    box-shadow: 0 0 10px rgba(255, 113, 206, 0.5);
+    background: #1a1a1a;
+}
+
+/* Para inputs de matrices o grids */
+.input-grid {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+/* --- BOTONES --- */
+button {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink));
+    color: #fff;
+    border: none;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: all 0.3s;
+    margin-top: 20px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+button:hover {
+    filter: brightness(1.2);
+    box-shadow: 0 0 20px rgba(255, 113, 206, 0.6);
+    transform: translateY(-2px);
+}
+
+/* Botón de "Volver al Menú" */
+.btn-back {
+    display: inline-block;
+    background: transparent;
+    border: 1px solid var(--neon-blue);
+    color: var(--neon-blue);
+    width: auto;
+    padding: 10px 20px;
+    font-size: 14px;
+    margin-bottom: 20px;
+    text-decoration: none;
+}
+.btn-back:hover {
+    background: rgba(1, 205, 254, 0.2);
+    box-shadow: 0 0 10px var(--neon-blue);
+}
+
+/* --- CAJAS DE RESULTADOS --- */
+.result-box {
+    background: #000;
+    padding: 20px;
+    border: 1px dashed var(--neon-pink);
+    font-family: 'Courier New', monospace;
+    color: #fff;
+    min-height: 50px;
+    margin-top: 20px;
+    white-space: pre-wrap; /* Mantiene formato de texto */
+}
+
+.error {
+    color: var(--error-color);
+    border-color: var(--error-color);
+}
+
+/* --- SECCIONES --- */
+.section {
+    margin-bottom: 30px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 20px;
+}
+.section:last-child {
+    border-bottom: none;
+}
