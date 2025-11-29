@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portafolio de Álgebra - Menú Principal</title>
+    
+    <link rel="stylesheet" href="css/style.css">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- ESTILOS ESPECÍFICOS DEL MENÚ --- */
+        
+        .hero-section {
+            text-align: center;
+            margin: 40px 0;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .subtitle-main {
+            color: var(--neon-blue);
+            font-size: 1.2rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-top: -20px;
+            text-shadow: 0 0 10px rgba(1, 205, 254, 0.5);
+        }
+
+        /* Grid de Actividades */
+        .activities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            width: 100%;
+            max-width: 1000px;
+            padding: 20px;
+        }
+
+        /* Tarjeta de Actividad */
+        .activity-card {
+            background: rgba(13, 2, 33, 0.8);
+            border: 1px solid var(--grid-line);
+            border-radius: 8px;
+            padding: 25px;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+        }
+
+        /* Efecto Hover */
+        .activity-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: var(--neon-pink);
+            box-shadow: 0 0 25px rgba(255, 113, 206, 0.4), inset 0 0 10px rgba(255, 113, 206, 0.2);
+            background: rgba(20, 0, 40, 0.9);
+        }
+
+        /* Icono de la tarjeta */
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            background: -webkit-linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 5px rgba(255,255,255,0.3));
+            transition: all 0.3s;
+        }
+
+        .activity-card:hover .card-icon {
+            transform: scale(1.1);
+            background: -webkit-linear-gradient(45deg, var(--neon-pink), #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card-title {
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .card-desc {
+            color: var(--text-dim);
+            font-size: 0.8rem;
+        }
+
+        /* Etiqueta de número */
+        .act-number {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 0.7rem;
+            color: var(--neon-blue);
+            border: 1px solid var(--neon-blue);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero-section">
+        <h1>PORTAFOLIO DE ÁLGEBRA</h1>
+        <div class="subtitle-main">JUAN JOSÉ ZAPATA BUENFIL • 1B</div>
+    </div>
+
+    <div class="activities-grid">
+
+        <a href="actividades/actividad02/index.html" class="activity-card">
+            <span class="act-number">02</span>
+            <i class="fas fa-ruler-horizontal card-icon"></i>
+            <div class="card-title">Recta Numérica</div>
+            <div class="card-desc">Visualizador de conjuntos numéricos</div>
+        </a>
+
+        <a href="actividades/actividad04/index.html" class="activity-card">
+            <span class="act-number">04</span>
+            <i class="fas fa-infinity card-icon"></i> <div class="card-title">Números Complejos</div>
+            <div class="card-desc">Calculadora de conversiones</div>
+        </a>
+
+        <a href="actividades/actividad06/index.html" class="activity-card">
+            <span class="act-number">06</span>
+            <i class="fas fa-language card-icon"></i>
+            <div class="card-title">Traductor Algebraico</div>
+            <div class="card-desc">Lenguaje natural a expresión</div>
+        </a>
+
+        <a href="actividades/actividad08/index.html" class="activity-card">
+            <span class="act-number">08</span>
+            <i class="fas fa-calculator card-icon"></i>
+            <div class="card-title">Operaciones</div>
+            <div class="card-desc">Calculadora de variables</div>
+        </a>
+
+        <a href="actividades/actividad10/index.html" class="activity-card">
+            <span class="act-number">10</span>
+            <i class="fas fa-expand-arrows-alt card-icon"></i>
+            <div class="card-title">Productos Notables</div>
+            <div class="card-desc">Expansión y visualización</div>
+        </a>
+
+        <a href="actividades/actividad12/index.html" class="activity-card">
+            <span class="act-number">12</span>
+            <i class="fas fa-divide card-icon"></i>
+            <div class="card-title">División Sintética</div>
+            <div class="card-desc">Algoritmo de polinomios</div>
+        </a>
+
+        <a href="actividades/actividad14/index.html" class="activity-card">
+            <span class="act-number">14</span>
+            <i class="fas fa-microchip card-icon"></i>
+            <div class="card-title">Álgebra Simbólica</div>
+            <div class="card-desc">Despeje de ecuaciones</div>
+        </a>
+
+        <a href="README.md" class="activity-card" style="border-style: dashed;">
+            <i class="fas fa-info-circle card-icon" style="background: none; -webkit-text-fill-color: var(--text-dim);"></i>
+            <div class="card-title">Acerca de</div>
+            <div class="card-desc">Información del proyecto</div>
+        </a>
+
+    </div>
+
+    <div class="section credits" style="margin-top: 50px; text-align: center; opacity: 0.7;">
+        <p>Tecnológico de Software • Fundamentos de Álgebra • 2025</p>
+    </div>
+
+</body>
+</html>
