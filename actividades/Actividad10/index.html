@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos Notables - Sistema Algebraico</title>
+    
+    <link rel="stylesheet" href="../../css/style.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.0/math.min.js"></script>
+
+    <style>
+        /* Estilos específicos para las tarjetas de resultados */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+            display: none; /* Se activa con JS */
+        }
+
+        .result-card {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--neon-blue);
+            padding: 20px;
+            position: relative;
+        }
+
+        .result-card h4 {
+            color: var(--neon-purple);
+            margin-top: 0;
+            border-bottom: 1px dashed var(--grid-line);
+            padding-bottom: 10px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .formula-display {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            background: rgba(255,255,255,0.05);
+            margin: 10px 0;
+        }
+
+        .step-item {
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.85rem;
+            color: var(--text-dim);
+        }
+
+        .verificacion-box {
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            margin-top: 10px;
+            border: 1px solid;
+        }
+        .verificacion-box.success {
+            background: rgba(0, 255, 0, 0.1);
+            border-color: #00ff00;
+            color: #00ff00;
+        }
+        .verificacion-box.error {
+            background: rgba(255, 0, 0, 0.1);
+            border-color: #ff0000;
+            color: #ff0000;
+        }
+
+        .log-entry {
+            background: #000;
+            border-left: 3px solid var(--neon-pink);
+            padding: 10px;
+            margin-bottom: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+        }
+        .log-time { color: var(--text-dim); font-size: 0.7rem; }
+
+        canvas {
+            background: #000;
+            border: 1px solid var(--grid-line);
+            width: 100%;
+            max-width: 350px;
+            display: block;
+            margin: 10px auto;
+        }
+    </style>
+</head>
+<body>
+
+    <a href="../../index.html" class="btn-back">← Volver al Menú</a>
+
+    <div class="container">
+        <h1>Productos Notables</h1>
+        
+        <div class="section" style="border-left: 4px solid var(--neon-pink);">
+            <h3>Credenciales de Usuario</h3>
+            <div style="display: flex; flex-wrap: wrap; gap: 20px; font-size: 0.9rem; color: var(--text-dim);">
+                <span>USER: <strong style="color:#fff">Juan José Zapata Buenfil</strong></span>
+                <span>ID: <strong style="color:#fff">1B</strong></span>
+                <span>SYSTEM: <strong style="color:#fff">Fundamentos de Álgebra</strong></span>
+                <span>ACCESS: <strong style="color:var(--neon-blue)">GRANTED</strong></span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Parámetros de Entrada</h3>
+            <div class="input-grid">
+                <div>
+                    <label>Modo de Operación</label>
+                    <select id="modo">
+                        <option value="numerico">Numérico (Visualización Gráfica)</option>
+                        <option value="algebraico">Algebraico (Simbólico)</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Algoritmo (Producto Notable)</label>
+                    <select id="tipo">
+                        <option value="binomio-cuadrado-suma">Binomio Cuadrado (+)</option>
+                        <option value="binomio-cuadrado-resta">Binomio Cuadrado (-)</option>
+                        <option value="binomio-cubo-suma">Binomio Cubo (+)</option>
+                        <option value="binomio-cubo-resta">Binomio Cubo (-)</option>
+                        <option value="termino-comun">Término Común</option>
+                        <option value="conjugados">Conjugados</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="input-grid" style="margin-top: 20px;">
+                <div>
+                    <label>Variable A</label>
+                    <input type="text" id="valor-a" placeholder="Ingresa valor...">
+                </div>
+                <div>
+                    <label>Variable B</label>
+                    <input type="text" id="valor-b" placeholder="Ingresa valor...">
+                </div>
+            </div>
+
+            <button id="calcular">EJECUTAR CÁLCULO</button>
+        </div>
+
+        <div class="results-grid">
+            
+            <div class="result-card">
+                <h4>Definición del Problema</h4>
+                <small style="color: var(--text-dim)">Expresión Original:</small>
+                <div id="expresion-original" class="formula-display"></div>
+                
+                <small style="color: var(--text-dim)">Fórmula Base:</small>
+                <div id="formula" class="formula-display" style="color: var(--neon-blue)"></div>
+            </div>
+
+            <div class="result-card">
+                <h4>Proceso de Ejecución</h4>
+                <div id="desarrollo">
+                    <p style="text-align: center; color: var(--text-dim)">Esperando datos...</p>
+                </div>
+            </div>
+
+            <div class="result-card" style="border-color: var(--neon-pink);">
+                <h4>Salida del Sistema</h4>
+                <small>Forma Expandida:</small>
+                <div id="expandida" class="formula-display" style="color: var(--neon-pink); font-weight: bold;"></div>
+                
+                <small>Resultado Numérico:</small>
+                <div id="resultado-numerico" class="formula-display"></div>
+                
+                <div id="verificacion"></div>
+            </div>
+
+            <div class="result-card">
+                <h4>Renderizado Geométrico</h4>
+                <canvas id="canvas-geometrico" width="300" height="300"></canvas>
+                <p id="descripcion-geometrica" style="text-align: center; font-size: 0.8rem; color: var(--text-dim)"></p>
+            </div>
+
+        </div>
+
+        <div class="section" style="margin-top: 30px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3>Log de Sistema (Historial)</h3>
+                <button id="limpiar-historial" style="width: auto; padding: 5px 15px; margin:0; background: transparent; border: 1px solid var(--error-color); color: var(--error-color);">PURGE LOGS</button> 
+            </div>
+            <div id="historial" style="max-height: 200px; overflow-y: auto; margin-top: 15px; border: 1px solid var(--grid-line); padding: 10px;"></div>
+        </div>
+        
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
