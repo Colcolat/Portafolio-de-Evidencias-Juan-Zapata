@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Algebraica</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    
+    <style>
+        /* Estilos específicos para esta calculadora */
+        .calc-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        textarea.code-area {
+            font-family: 'Courier New', monospace;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue);
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        textarea.code-area:focus {
+            border-color: var(--neon-pink);
+            box-shadow: 0 0 15px rgba(255, 113, 206, 0.3);
+            color: #fff;
+        }
+
+        label {
+            color: var(--neon-purple);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .helper-text {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        /* Responsive para móviles */
+        @media (max-width: 768px) {
+            .calc-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <a href="../../index.html" class="btn-back">← Volver al Menú</a>
+
+    <div class="container">
+        <h1>Calculadora de Variables</h1>
+        
+        <div class="section" style="border-bottom: 1px dashed var(--neon-blue); padding-bottom: 20px; margin-bottom: 20px;">
+            <p style="font-size: 0.9rem; color: var(--text-dim);">
+                Define variables a la izquierda y úsalas en ecuaciones a la derecha. 
+                Soporta operaciones básicas (+ - * /) y potencias (^).
+            </p>
+        </div>
+
+        <div class="calc-grid">
+            <div>
+                <label>1. Definir Variables</label>
+                <span class="helper-text">Formato: nombre = valor</span>
+                <textarea id="variables" class="code-area" placeholder="w1 = 10&#10;w2 = 5&#10;costo_base = 100"></textarea>
+            </div>
+
+            <div>
+                <label>2. Escribir Ecuaciones</label>
+                <span class="helper-text">Usa las variables definidas</span>
+                <textarea id="equations" class="code-area" placeholder="total = w1 * w2&#10;precio_final = costo_base + total"></textarea>
+            </div>
+        </div>
+
+        <button id="calculate-btn">CALCULAR RESULTADOS</button>
+
+        <div class="section" style="margin-top: 30px;">
+            <h3>Resultados</h3>
+            <div id="result" class="result-box">
+                Esperando datos...
+            </div>
+        </div>
+
+        <div class="section credits" style="text-align: center; border-top: 1px dashed var(--neon-pink); margin-top: 30px; padding-top: 20px;">
+            <p style="font-size: 14px;"><strong>Alumno:</strong> Juan José Zapata Buenfil</p>
+            <p style="font-size: 14px;"><strong>Materia:</strong> Fundamentos de Álgebra • <strong>Grupo:</strong> 1B</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
