@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>División Sintética - CyberCalc</title>
+    
+    <link rel="stylesheet" href="../../css/style.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Press+Start+2P&family=Monoton&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.0/math.min.js"></script>
+
+    <style>
+        /* Override de fuentes globales para estilo Arcade */
+        h1 { font-family: 'Monoton', cursive !important; color: #ff00ff !important; text-shadow: 0 0 10px #ff00ff; }
+        h2, h3 { font-family: 'Orbitron', sans-serif !important; color: #00ffe7 !important; }
+        
+        /* Canvas de fondo */
+        #bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; }
+
+        /* Estilos de la tabla sintética */
+        .synth-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            margin: 20px 0;
+        }
+        
+        .synth-table td {
+            padding: 15px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .residuo-cell {
+            background: rgba(255, 0, 255, 0.2);
+            border: 2px solid #ff00ff;
+            color: #ff00ff;
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(255,0,255,0.5);
+        }
+
+        .result-cell {
+            color: #00ffe7;
+            font-weight: bold;
+        }
+
+        .result-section {
+            display: none;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #00ffe7;
+            padding: 20px;
+            margin-top: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 255, 231, 0.3);
+        }
+        .result-section.show { display: block; animation: popIn 0.5s ease; }
+
+        @keyframes popIn { from { transform: scale(0.9); opacity:0; } to { transform: scale(1); opacity:1; } }
+
+        .final-result-box {
+            border-top: 1px dashed #fff;
+            padding-top: 15px;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        /* Input overrides */
+        input[type="text"] {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 0.8rem;
+            color: #00ffe7;
+            border-color: #ff00ff;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="bg"></canvas>
+
+    <a href="../../index.html" class="btn-back">← SALIR</a>
+
+    <div class="container" style="background: rgba(13, 2, 33, 0.85); box-shadow: 0 0 50px rgba(0,0,0,0.8);">
+        
+        <div class="section" style="border: 1px solid var(--neon-pink); padding: 15px; margin-bottom: 30px;">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; font-size: 0.8rem; font-family: 'Orbitron', sans-serif;">
+                <span>ALUMNO: Juan José Zapata Buenfil</span>
+                <span>MATERIA: Fundamentos de Álgebra</span>
+                <span>DOCENTE: Jorge Javier Pedroza Romero</span>
+                <span>GRUPO: 1B</span>
+            </div>
+        </div>
+
+        <h1>División Sintética</h1>
+        
+        <div class="section">
+            <div class="input-grid">
+                <div>
+                    <label style="font-family: 'Orbitron'">Polinomio P(x)</label>
+                    <input type="text" id="polinomio" placeholder="Ej: 5x^3 - 2x + 1">
+                    <small style="color:#aaa">Formato: ax^n + bx + c</small>
+                </div>
+                <div>
+                    <label style="font-family: 'Orbitron'">Raíz (r)</label>
+                    <input type="text" id="raiz" placeholder="Ej: 2 o 1+i">
+                    <small style="color:#aaa">Soporta complejos (i)</small>
+                </div>
+            </div>
+            
+            <button id="btn-calcular" style="margin-top: 20px; font-family: 'Orbitron'; letter-spacing: 2px;">EJECUTAR ALGORITMO</button>
+        </div>
+
+        <div id="resultado" class="result-section"></div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
