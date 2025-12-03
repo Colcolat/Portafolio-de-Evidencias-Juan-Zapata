@@ -1,4 +1,4 @@
-# 🌌 Portafolio de Evidencias: Fundamentos de Álgebra
+# Portafolio de Evidencias: Fundamentos de Álgebra
 
 ![Status](https://img.shields.io/badge/Status-Completado-00ff9d?style=for-the-badge)
 ![Estilo](https://img.shields.io/badge/Estilo-Vaporwave%20%2F%20Cyberpunk-ff71ce?style=for-the-badge)
@@ -7,7 +7,7 @@
 
 ---
 
-## 🌐 Ver Proyecto en Vivo
+## Ver Proyecto en Vivo
 
 ### [**ACCEDER AL PORTAFOLIO (GITHUB PAGES)**](https://colcolat.github.io/Portafolio-de-Evidencias-Juan-Zapata/)
 
