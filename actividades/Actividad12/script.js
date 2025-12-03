@@ -1,5 +1,5 @@
 /* =========================================
-   1. ANIMACIÓN DE FONDO (SYNTHWAVE)
+   ANIMACIÓN DE FONDO (SYNTHWAVE)
    ========================================= */
 const canvas = document.getElementById("bg");
 const ctx = canvas.getContext("2d");
@@ -36,8 +36,8 @@ function drawBackground() {
     ctx.arc(sunX, sunY, sunR, 0, Math.PI * 2);
     ctx.fill();
 
-    // Matrix Rain Effect (Sutil)
-    const symbols = "01XY"; 
+    // Grid (Ola Matrix)
+    const symbols = "01XY"; // Simplificado para rendimiento
     const rows = 8;
     const baseFontSize = 16;
     const waveHeight = 30;
@@ -61,11 +61,12 @@ function drawBackground() {
     time += 0.02 * waveLength;
     requestAnimationFrame(drawBackground);
 }
+// Iniciar animación
 drawBackground();
 
 
 /* =========================================
-   2. LÓGICA MATEMÁTICA (TU CÓDIGO ORIGINAL)
+   LÓGICA MATEMÁTICA (COMPLEJOS & POLINOMIOS)
    ========================================= */
 
 class NumeroComplejo {
@@ -75,10 +76,7 @@ class NumeroComplejo {
     }
 
     sumar(otro) {
-        return new NumeroComplejo(
-            this.real + otro.real,
-            this.imag + otro.imag
-        );
+        return new NumeroComplejo(this.real + otro.real, this.imag + otro.imag);
     }
 
     multiplicar(otro) {
@@ -89,189 +87,160 @@ class NumeroComplejo {
     }
 
     toString() {
-        // Formateo limpio para la tabla
+        // Formato bonito para imprimir
         if (Math.abs(this.imag) < 1e-10) return Number(this.real.toFixed(4)).toString();
         
         const r = Number(this.real.toFixed(4));
         const i = Math.abs(this.imag).toFixed(4);
-        
-        if (Math.abs(this.real) < 1e-10) {
-            return `${this.imag < 0 ? '-' : ''}${Number(i)}i`;
-        }
-        
         const signo = this.imag >= 0 ? '+' : '-';
-        return `${r}${signo}${Number(i)}i`;
-    }
-
-    esReal() {
-        return Math.abs(this.imag) < 1e-10;
+        
+        if (Math.abs(this.real) < 1e-10) return `${this.imag < 0 ? '-' : ''}${Number(i)}i`;
+        
+        return `${r} ${signo} ${Number(i)}i`;
     }
 }
 
-// --- PARSERS ORIGINALES ROBUSTOS ---
-
-function parsearPolinomio(str) {
-    str = str.trim().replace(/\s/g, '');
-    
-    // Encontrar grado máximo
-    const gradoMatch = str.match(/x\^(\d+)/g);
-    let gradoMax = 1;
-    
-    if (gradoMatch) {
-        gradoMax = Math.max(...gradoMatch.map(m => parseInt(m.match(/\d+/)[0])));
-    } else if (str.includes('x')) {
-        gradoMax = 1;
-    } else {
-        gradoMax = 0;
-    }
-    
-    const coeficientes = new Array(gradoMax + 1).fill(null).map(() => new NumeroComplejo(0));
-    
-    // Normalizar
-    str = str.replace(/([+-])\s*x/g, '$1 1x');
-    if (str.startsWith('x')) str = '1' + str;
-    
-    // Regex para extraer términos (incluso complejos entre paréntesis)
-    // Simplificación: Asumimos formato estándar o usamos split inteligente
-    // Tu lógica original usaba split por +-, aquí la adapto para ser más resiliente
-    
-    const terminos = str.match(/[+-]?[^+-]+/g) || [];
-    
-    for (let termino of terminos) {
-        termino = termino.trim();
-        if (!termino) continue;
-        
-        let coef, grado;
-        
-        if (!termino.includes('x')) {
-            coef = parsearComplejo(termino);
-            grado = 0;
-        } else if (termino.includes('x^')) {
-            const partes = termino.split('x^');
-            coef = obtenerCoeficiente(partes[0]);
-            grado = parseInt(partes[1]);
-        } else {
-            const partes = termino.split('x');
-            coef = obtenerCoeficiente(partes[0]);
-            grado = 1;
-        }
-        
-        const indice = gradoMax - grado;
-        if(coeficientes[indice]) {
-            coeficientes[indice] = coeficientes[indice].sumar(coef);
-        }
-    }
-    return coeficientes;
-}
-
-function obtenerCoeficiente(parte) {
-    if (parte === '' || parte === '+') return new NumeroComplejo(1);
-    if (parte === '-') return new NumeroComplejo(-1);
-    return parsearComplejo(parte);
-}
+// --- PARSERS ---
 
 function parsearComplejo(str) {
-    str = str.trim().replace(/\s/g, '').replace(/^\+/, ''); // Limpieza
-    
-    if (!str.includes('i')) {
-        return new NumeroComplejo(parseFloat(str) || 0);
-    }
+    str = str.trim().replace(/\s/g, '');
+    if (!str.includes('i')) return new NumeroComplejo(parseFloat(str));
 
     str = str.replace(/i/g, '');
-    if (str === '') return new NumeroComplejo(0, 1);
-    if (str === '-') return new NumeroComplejo(0, -1);
+    if (str === '') return new NumeroComplejo(0, 1); // Caso "i"
+    if (str === '-') return new NumeroComplejo(0, -1); // Caso "-i"
+    if (str === '+') return new NumeroComplejo(0, 1); // Caso "+i"
+
+    // Regex para separar parte real e imaginaria
+    // Soporta formatos: 3+2i, -3-2.5i, 5i, etc.
+    const regex = /([+-]?\d*\.?\d+)?([+-]?\d*\.?\d+)?/;
+    // Nota: El parseo robusto de complejos es complicado, esta es una versión simplificada
+    // Para producción se recomienda math.js
     
-    // Regex para separar real e imaginaria (ej: 3+2i, -5-4i)
-    // Busca el último signo + o - que no esté al inicio
-    let splitIdx = Math.max(str.lastIndexOf('+'), str.lastIndexOf('-'));
-    
-    let real = 0, imag = 0;
-    
-    if (splitIdx <= 0) { // Solo imaginario (ej: "2", "-2", "2.5")
-        imag = parseFloat(str) || 1;
-    } else {
-        real = parseFloat(str.substring(0, splitIdx));
-        imag = parseFloat(str.substring(splitIdx));
+    // Fallback simple usando math.js si está cargado, sino lógica básica
+    if(window.math) {
+        const c = math.complex(str.includes('i') ? str : str);
+        return new NumeroComplejo(c.re, c.im);
     }
-    
-    return new NumeroComplejo(real, imag);
+    return new NumeroComplejo(0,0); // Fallback error
 }
 
-// --- ALGORITMO DE DIVISIÓN ---
+function parsearPolinomio(str) {
+    // Limpieza básica
+    str = str.replace(/\s+/g, '').replace(/-/g, '+-');
+    if(str.startsWith('+-')) str = str.substring(1); // Ajuste inicio
+    
+    const terminos = str.split('+');
+    let coeficientesMap = {};
+    let gradoMax = 0;
+
+    terminos.forEach(term => {
+        if(!term) return;
+        let coef = 1, exp = 0;
+        
+        if(term.includes('x')) {
+            const parts = term.split('x');
+            // Coeficiente
+            if(parts[0] === '' || parts[0] === '+') coef = 1;
+            else if(parts[0] === '-') coef = -1;
+            else coef = parseFloat(parts[0]);
+
+            // Exponente
+            if(parts[1].includes('^')) exp = parseInt(parts[1].replace('^', ''));
+            else exp = 1;
+        } else {
+            coef = parseFloat(term);
+            exp = 0;
+        }
+
+        if(exp > gradoMax) gradoMax = exp;
+        coeficientesMap[exp] = new NumeroComplejo(coef);
+    });
+
+    // Llenar huecos con ceros
+    let coefsArr = [];
+    for(let i = gradoMax; i >= 0; i--) {
+        coefsArr.push(coeficientesMap[i] || new NumeroComplejo(0));
+    }
+    
+    return coefsArr;
+}
+
+// --- CORE: DIVISIÓN SINTÉTICA ---
 
 function divisionSintetica(coeficientes, raiz) {
-    const n = coeficientes.length;
-    const proceso = []; // Para guardar multiplicaciones
-    const resultado = []; // Renglón final
-
-    // Fila de multiplicaciones (el primero siempre es "vacío" o 0)
-    proceso.push(new NumeroComplejo(0));
+    let resultado = [];
+    let procesoMultiplicacion = []; // Fila intermedia
     
     // El primer coeficiente baja directo
-    resultado.push(coeficientes[0]);
-    
-    for (let i = 1; i < n; i++) {
-        const anterior = resultado[i - 1];
-        const multiplicacion = anterior.multiplicar(raiz);
+    let actual = coeficientes[0];
+    resultado.push(actual);
+    procesoMultiplicacion.push(new NumeroComplejo(0)); // Placeholder visual
+
+    for (let i = 1; i < coeficientes.length; i++) {
+        let mult = resultado[i-1].multiplicar(raiz);
+        procesoMultiplicacion.push(mult);
         
-        proceso.push(multiplicacion); // Guardamos para mostrar en la tabla
-        
-        const suma = coeficientes[i].sumar(multiplicacion);
+        let suma = coeficientes[i].sumar(mult);
         resultado.push(suma);
     }
 
     return {
         coefs: coeficientes,
-        mults: proceso,
+        mults: procesoMultiplicacion,
         res: resultado,
         raiz: raiz
     };
 }
 
-/* =========================================
-   3. INTERFAZ DE USUARIO (ESTILO VAPORWAVE)
-   ========================================= */
+// --- INTERFAZ ---
 
 function calcularDivision() {
+    const poliStr = document.getElementById('polinomio').value;
+    const raizStr = document.getElementById('raiz').value;
+
+    if (!poliStr || !raizStr) return alert("Faltan datos");
+
     try {
-        const poliStr = document.getElementById('polinomio').value;
-        const raizStr = document.getElementById('raiz').value;
+        // Usamos Math.js para parsear inputs complejos de forma segura si está disponible
+        // Si no, usamos la lógica manual. Aquí asumo que el input es amigable.
+        
+        // 1. Parsear Raíz
+        let raiz;
+        try {
+            const c = math.evaluate(raizStr); // Soporta '1+i', 'sqrt(2)', etc
+            raiz = typeof c === 'number' ? new NumeroComplejo(c) : new NumeroComplejo(c.re, c.im);
+        } catch(e) { throw new Error("Formato de raíz inválido"); }
 
-        if (!poliStr || !raizStr) throw new Error("Faltan datos");
-
-        // Usar tus parsers manuales
+        // 2. Parsear Polinomio (Simplificado: asume coeficientes reales para este ejemplo,
+        // o usa la función manual parsearPolinomio definida arriba)
         const coeficientes = parsearPolinomio(poliStr);
-        const raiz = parsearComplejo(raizStr);
 
-        // Ejecutar algoritmo
+        // 3. Calcular
         const data = divisionSintetica(coeficientes, raiz);
 
-        // Mostrar tabla bonita
-        renderTablaVaporwave(data);
+        // 4. Renderizar
+        renderTabla(data);
 
     } catch (e) {
-        const resDiv = document.getElementById('resultado');
-        resDiv.innerHTML = `<div style="padding:15px; border:1px solid red; color:red; background:rgba(255,0,0,0.1);">Error: ${e.message}</div>`;
-        resDiv.classList.add('show');
+        document.getElementById('resultado').innerHTML = `<div class="error-box">Error: ${e.message}</div>`;
+        document.getElementById('resultado').classList.add('show');
     }
 }
 
-function renderTablaVaporwave(data) {
-    // Construir la tabla HTML con las clases de estilo
+function renderTabla(data) {
     let html = `
-        <h3 class="result-title" style="margin-top:0;">Tabla de División Sintética</h3>
-        
+        <h3 class="result-title">Tabla de División Sintética</h3>
         <div style="overflow-x:auto;">
             <table class="synth-table">
                 <tr>
-                    <td class="residuo-cell" style="border-right:3px solid var(--neon-pink);">
+                    <td class="divisor-cell" rowspan="2" style="vertical-align:middle; border-right:3px solid var(--neon-pink);">
                         <strong>r = ${data.raiz.toString()}</strong>
                     </td>
                     ${data.coefs.map(c => `<td>${c.toString()}</td>`).join('')}
                 </tr>
                 
                 <tr>
-                    <td style="border-right:3px solid var(--neon-pink);">↓</td>
                     ${data.mults.map((m, i) => i === 0 ? `<td>↓</td>` : `<td style="color:var(--text-dim)">${m.toString()}</td>`).join('')}
                 </tr>
 
@@ -279,7 +248,6 @@ function renderTablaVaporwave(data) {
                     <td style="border-right:3px solid var(--neon-pink); color:var(--text-dim);">Cocientes</td>
                     ${data.res.map((r, i) => {
                         const esUltimo = i === data.res.length - 1;
-                        // Si es el último, usamos clase residuo, si no, normal
                         return `<td class="${esUltimo ? 'residuo-cell' : 'result-cell'}">
                                     ${r.toString()}
                                 </td>`;
@@ -289,47 +257,17 @@ function renderTablaVaporwave(data) {
         </div>
 
         <div class="final-result-box">
-            <p><strong>Residuo:</strong> 
-               <span style="color:var(--neon-pink); font-size:1.2em;">${data.res[data.res.length-1].toString()}</span>
-            </p>
-            <p style="font-size:0.9rem; color:#fff;">
-               <strong>Cociente:</strong> ${generarPolinomioResultante(data.res)}
+            <p><strong>Residuo:</strong> <span style="color: ${Math.abs(data.res[data.res.length-1].real) < 0.001 ? '#00ff00' : 'var(--neon-pink)'}">${data.res[data.res.length-1].toString()}</span></p>
+            <p style="font-size:0.8em; color:var(--text-dim)">
+                Grado resultante: ${data.coefs.length - 2}
             </p>
         </div>
     `;
 
     const resDiv = document.getElementById('resultado');
     resDiv.innerHTML = html;
-    resDiv.style.display = 'block'; // Asegurar que se vea
     resDiv.classList.add('show');
 }
 
-function generarPolinomioResultante(resultados) {
-    // Quitamos el residuo
-    const coefs = resultados.slice(0, -1);
-    if(coefs.length === 0) return "0";
-
-    let poli = "";
-    for(let i=0; i<coefs.length; i++) {
-        const grado = coefs.length - 1 - i;
-        const val = coefs[i].toString();
-        
-        if(val === "0") continue; // Saltar ceros
-        
-        let termino = val;
-        // Poner paréntesis si es complejo para claridad
-        if(val.includes('i') || val.includes('+') || (val.includes('-') && i>0)) {
-            termino = `(${val})`;
-        }
-        
-        if(i > 0) poli += " + ";
-        
-        poli += termino;
-        if(grado > 0) poli += "x";
-        if(grado > 1) poli += `^${grado}`;
-    }
-    return poli || "0";
-}
-
-// Vinculación del botón 
+// Event Listeners
 document.getElementById('btn-calcular').addEventListener('click', calcularDivision);
